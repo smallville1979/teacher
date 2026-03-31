@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Teacher — Skint But Sorted</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #222;
+    --accent: #f5c842;
+    --accent2: #e85d26;
+    --text: #f0ede8;
+    --muted: #666;
+    --user-bubble: #1e2a1e;
+    --ai-bubble: #1a1a1a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: #000;
+    flex-shrink: 0;
+  }
+
+  .header-info h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  .header-info p {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    background: #4ade80;
+    border-radius: 50%;
+    margin-left: auto;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .warning-bar {
+    background: linear-gradient(90deg, #1a0f00, #1a1500, #1a0f00);
+    border-bottom: 1px solid #3a2800;
+    padding: 8px 20px;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: #f5c842cc;
+    text-align: center;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  /* MESSAGES */
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scroll-behavior: smooth;
+  }
+
+  #messages::-webkit-scrollbar { width: 4px; }
+  #messages::-webkit-scrollbar-track { background: transparent; }
+  #messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .msg {
+    display: flex;
+    gap: 10px;
+    max-width: 680px;
+    animation: fadeUp 0.25s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.user { flex-direction: row-reverse; margin-left: auto; }
+
+  .msg-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .msg.ai .msg-avatar { background: var(--accent); color: #000; font-family: 'Bebas Neue'; font-size: 16px; }
+  .msg.user .msg-avatar { background: var(--surface2); color: var(--muted); }
+
+  .bubble {
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 100%;
+  }
+
+  .msg.ai .bubble {
+    background: var(--ai-bubble);
+    border: 1px solid var(--border);
+    border-top-left-radius: 0;
+    color: var(--text);
+  }
+
+  .msg.user .bubble {
+    background: var(--user-bubble);
+    border: 1px solid #2a3a2a;
+    border-top-right-radius: 0;
+    color: #d4f0d4;
+  }
+
+  .bubble strong { color: var(--accent); font-weight: 600; }
+  .bubble em { color: #aaa; font-style: italic; }
+
+  /* TYPING INDICATOR */
+  .typing-dots {
+    display: flex;
+    gap: 4px;
+    padding: 8px 4px;
+    align-items: center;
+  }
+
+  .typing-dots span {
+    width: 7px;
+    height: 7px;
+    background: var(--muted);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); background: var(--accent); }
+  }
+
+  /* PUSH METER */
+  .push-meter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .push-label { margin-right: 4px; }
+  .push-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .push-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ade80, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.8s ease;
+    width: 10%;
+  }
+
+  .push-value { color: var(--accent); min-width: 28px; text-align: right; }
+
+  /* INPUT */
+  .input-area {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  textarea {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    padding: 12px 14px;
+    resize: none;
+    min-height: 48px;
+    max-height: 140px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  textarea:focus { border-color: var(--accent); }
+  textarea::placeholder { color: var(--muted); }
+
+  button#sendBtn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    height: 48px;
+  }
+
+  button#sendBtn:hover { background: #ffd855; transform: translateY(-1px); }
+  button#sendBtn:active { transform: translateY(0); }
+  button#sendBtn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
+
+  /* EMPTY STATE */
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    padding: 40px 20px;
+    gap: 16px;
+  }
+
+  .welcome-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+
+  .welcome h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  .welcome p {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 380px;
+    line-height: 1.6;
+  }
+
+  .welcome-rules {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .rule {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #aaa;
+    text-align: left;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .rule-icon { flex-shrink: 0; }
+
+  #welcomeScreen {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  #chatScreen { display: none; flex: 1; overflow: hidden; flex-direction: column; }
+  #chatScreen.active { display: flex; }
+  #welcomeScreen.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="avatar">T</div>
+  <div class="header-info">
+    <h1>THE TEACHER</h1>
+    <p>Joel Protocol · Skint But Sorted Network</p>
+  </div>
+  <div class="status-dot"></div>
+</header>
+
+<div class="warning-bar">
+  ⚡ This is not counselling. This is not a chatbot. This will push you. That is the point.
+</div>
+
+<!-- WELCOME SCREEN -->
+<div id="welcomeScreen">
+  <div class="welcome">
+    <div class="welcome-icon">🧠</div>
+    <h2>You made it this far.</h2>
+    <p>You found the tool, you used it, you got a result. That makes you one of the few.<br><br>
+    Now the question is: <strong style="color: var(--accent)">what are you going to do with that?</strong></p>
+
+    <div class="welcome-rules">
+      <div class="rule">
+        <span class="rule-icon">📐</span>
+        <span>The Teacher doesn't say "well done." It says "now make it bigger." That's how you grow.</span>
+      </div>
+      <div class="rule">
+        <span class="rule-icon">⚙️</span>
+        <span>You'll be asked to think, not just told things. That's the difference between help and a teacher.</span>
+      </div>
+      <div class="rule">
+        <span class="rule-icon">🔁</span>
+        <span>Before you finish, you'll be given something to pass on. That's not optional. That's the deal.</span>
+      </div>
+    </div>
+
+    <button onclick="startChat()" style="
+      margin-top: 16px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 14px 32px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    " onmouseover="this.style.background='#ffd855'" onmouseout="this.style.background='var(--accent)'">
+      I'M READY
+    </button>
+  </div>
+</div>
+
+<!-- CHAT SCREEN -->
+<div id="chatScreen">
+  <div id="messages"></div>
+
+  <div class="push-meter">
+    <span class="push-label">GROWTH PRESSURE</span>
+    <div class="push-bar"><div class="push-fill" id="pushFill"></div></div>
+    <span class="push-value" id="pushValue">10%</span>
+  </div>
+
+  <div class="input-area">
+    <textarea id="userInput" placeholder="Talk to the teacher..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button id="sendBtn" onclick="sendMessage()">SEND</button>
+  </div>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `You are THE TEACHER — a demanding, warm, and brilliant mentor built into the Skint But Sorted financial help network. You are based on "the Joel Protocol": the method of a philosophy teacher who never once said "good job, that's enough." Instead, every time someone had an idea, he'd say: "Yes. Now make it bigger. Why are you limiting it?"
+
+Your mission is NOT to help people solve their immediate problem. That is what the rest of the network is for. YOUR job is to take people who have just received help and turn them into someone who will help others.
+
+You are the teacher-who-makes-teachers. Every session ends with the person going away with something to pass on.
+
+HOW YOU OPERATE:
+
+1. OPENING: Ask what brought them here and what result they got. Get specific. Make them articulate it clearly — this starts the teaching process.
+
+2. THE PUSH: When they tell you what worked, don't validate it flatly. Say "Right. Now — why did that work? What's the principle underneath it?" Push them to understand the mechanism, not just the outcome. They need to understand it well enough to explain it to someone else.
+
+3. THINK BIGGER: When they describe their situation, always ask: "What would a bolder version of this look like?" or "If you were advising someone else in your situation, what would you tell them?" or "What's the next level of this?"
+
+4. IDENTIFY THEIR LOOP: Every person runs a broken thinking pattern. Without being preachy, gently name the pattern you observe: "It sounds like you've been waiting for permission to do X. You don't need it." or "You keep framing this as a problem someone else needs to solve. What if it's yours to solve?" Then offer the replacement process: specific, immediate, winnable.
+
+5. THE TEACHING MOMENT: Before the session ends, give them one thing to pass on. Specifically: "You now know something that three people in your life don't. Here's how to explain it in 30 seconds: [give them the script]." Make it easy to share. Make them feel like the expert.
+
+6. THE EXIT: Close with: "Now go tell one person. Not everyone. One. That's all." No big inspirational speech. Just the next right action.
+
+TONE RULES:
+- Warm but never soft. You genuinely care — that's why you push.
+- Never say "Great job!" or "That's amazing!" or "You should be proud." These are dead ends.
+- Instead: "Right. That's the starting point. Now what?"
+- You can say "that's good work" — once, then immediately pivot to the next level
+- Short sentences land harder than paragraphs when you're pushing someone
+- If they're struggling: ease up slightly, make the next step more winnable, never abandon them
+- If they're coasting: push harder. "You're thinking too small. Again."
+- British-friendly language. This is a UK network. "mate", "right", "sort it" are fine.
+- Never lecture. One point at a time. Then ask a question. Then wait.
+
+WHAT YOU NEVER DO:
+- Never give a list of resources or links. That's the other pages' job.
+- Never solve their immediate problem. Redirect: "The network pages cover that — what I want to know is what you're going to do with this knowledge."
+- Never validate victimhood. If someone is stuck in a victim frame, gently name it and offer the reframe: "That framing makes you the passenger. What if you're the driver?"
+- Never say "I understand this is hard." Say: "I know. Do it anyway."
+- Never let them end without something to pass on.
+
+GROWTH PRESSURE TRACKING:
+You internally track how much you're pushing this person (1-100). Start at 10 (light). 
+At the end of EVERY response, output this EXACT format on a new line:
+[PUSH:XX]
+Where XX is the current push level (10-90). Increase as they engage, back off slightly if they seem to struggle.
+
+Example: [PUSH:35]
+
+REMEMBER: You are the franchise layer. You are what makes the network self-sustaining. Every person who leaves this conversation should be capable of helping one other person. That is the only metric that matters.`;
+
+let messages = [];
+let isLoading = false;
+let pushLevel = 10;
+
+function startChat() {
+  document.getElementById('welcomeScreen').classList.add('hidden');
+  const chatScreen = document.getElementById('chatScreen');
+  chatScreen.classList.add('active');
+  
+  const openingMsg = `Right. You're here because something worked — some page on the network gave you something useful.\n\nBefore we go any further: **what was it, and what did you actually do with it?**\n\nBe specific. "It helped" isn't an answer. What changed?`;
+  
+  addMessage('ai', openingMsg);
+  messages.push({ role: 'assistant', content: openingMsg });
+  
+  document.getElementById('userInput').focus();
+}
+
+function addMessage(role, content) {
+  const container = document.getElementById('messages');
+  
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  
+  const avatarDiv = document.createElement('div');
+  avatarDiv.className = 'msg-avatar';
+  avatarDiv.textContent = role === 'ai' ? 'T' : '👤';
+  
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  
+  // Simple markdown-ish rendering
+  const formatted = content
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+  
+  bubble.innerHTML = formatted;
+  
+  div.appendChild(avatarDiv);
+  div.appendChild(bubble);
+  container.appendChild(div);
+  
+  container.scrollTop = container.scrollHeight;
+}
+
+function addTyping() {
+  const container = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg ai';
+  div.id = 'typing';
+  
+  const avatarDiv = document.createElement('div');
+  avatarDiv.className = 'msg-avatar';
+  avatarDiv.textContent = 'T';
+  
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  
+  div.appendChild(avatarDiv);
+  div.appendChild(bubble);
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+function updatePushMeter(level) {
+  pushLevel = Math.max(10, Math.min(90, level));
+  document.getElementById('pushFill').style.width = pushLevel + '%';
+  document.getElementById('pushValue').textContent = pushLevel + '%';
+  
+  const fill = document.getElementById('pushFill');
+  if (pushLevel < 35) fill.style.background = 'linear-gradient(90deg, #4ade80, #86efac)';
+  else if (pushLevel < 65) fill.style.background = 'linear-gradient(90deg, #4ade80, #f5c842)';
+  else fill.style.background = 'linear-gradient(90deg, #f5c842, #e85d26)';
+}
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+  
+  input.value = '';
+  input.style.height = 'auto';
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+  
+  addMessage('user', text);
+  messages.push({ role: 'user', content: text });
+  
+  addTyping();
+  
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: messages
+      })
+    });
+    
+    const data = await response.json();
+    let reply = data.content?.[0]?.text || 'Something went wrong. Try again.';
+    
+    // Extract push level
+    const pushMatch = reply.match(/\[PUSH:(\d+)\]/);
+    if (pushMatch) {
+      updatePushMeter(parseInt(pushMatch[1]));
+      reply = reply.replace(/\[PUSH:\d+\]\s*/g, '').trim();
+    }
+    
+    removeTyping();
+    addMessage('ai', reply);
+    messages.push({ role: 'assistant', content: reply });
+    
+  } catch (err) {
+    removeTyping();
+    addMessage('ai', 'Connection dropped. Try again — the teacher is still here.');
+  }
+  
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+  input.focus();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+</script>
+</body>
+</html>
