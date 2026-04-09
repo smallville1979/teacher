@@ -4,13 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Teacher — Skint But Sorted</title>
-  <meta name="description" content="You made it through. Now be honest. What actually changed?">
+  <meta name="description" content="You made it through the network. Now pass it on. The Teacher is the accountability and helper destination for the Skint But Sorted network.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg: #111111;
       --surface: #1c1c1c;
@@ -22,551 +20,288 @@
       --text-dim: #888880;
       --green: #4caf7d;
       --red: #e05c4b;
+      --blue: #5b9bd5;
       --font-display: 'Bebas Neue', sans-serif;
       --font-mono: 'IBM Plex Mono', monospace;
       --font-body: 'IBM Plex Sans', sans-serif;
     }
-
     html { scroll-behavior: smooth; }
-
     body {
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-body);
       line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* GRAIN OVERLAY */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.4;
-    }
-
-    /* TOP BAR */
-    .topbar {
-      border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-dim);
-      letter-spacing: 0.08em;
-    }
-    .topbar a { color: var(--accent); text-decoration: none; }
-
-    /* HERO */
-    .hero {
-      padding: 60px 24px 40px;
-      max-width: 680px;
+      max-width: 720px;
       margin: 0 auto;
-      text-align: center;
+      padding: 0 20px 60px;
     }
-    .hero-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .hero h1 {
-      font-family: var(--font-display);
-      font-size: clamp(64px, 12vw, 110px);
-      line-height: 0.9;
-      letter-spacing: 0.01em;
-      color: var(--text);
-      margin-bottom: 24px;
-    }
-    .hero h1 span { color: var(--accent); }
-    .hero-sub {
-      font-family: var(--font-mono);
-      font-size: 15px;
-      color: var(--text-dim);
-      line-height: 1.7;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    /* DIVIDER */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 40px auto;
-      max-width: 680px;
-    }
-
-    /* SECTION */
-    .section {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 0 24px 48px;
-    }
-    .section-number {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .section h2 {
-      font-family: var(--font-display);
-      font-size: clamp(36px, 7vw, 56px);
-      line-height: 1;
-      margin-bottom: 8px;
-      color: var(--text);
-    }
-    .section-desc {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text-dim);
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
-    /* WIN BUTTONS */
-    .wins-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .win-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 14px;
-      padding: 16px 20px;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.15s;
-      line-height: 1.4;
-      position: relative;
-      padding-left: 48px;
-    }
-    .win-btn::before {
-      content: '○';
-      position: absolute;
-      left: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-dim);
-      font-size: 16px;
-      transition: all 0.15s;
-    }
-    .win-btn:hover {
-      border-color: var(--accent-dim);
-      background: var(--surface2);
-    }
-    .win-btn.selected {
-      border-color: var(--accent);
-      background: var(--surface2);
-      color: var(--accent);
-    }
-    .win-btn.selected::before {
-      content: '●';
-      color: var(--accent);
-    }
-
-    /* TEXT INPUT */
-    .own-it-input {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 14px;
-      padding: 16px 20px;
-      resize: none;
-      min-height: 80px;
-      transition: border-color 0.15s;
-      outline: none;
-      margin-top: 10px;
-    }
-    .own-it-input::placeholder { color: var(--text-dim); }
-    .own-it-input:focus { border-color: var(--accent); }
-
-    /* PASS IT ON */
-    .pass-on-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    @media (max-width: 480px) {
-      .pass-on-options { grid-template-columns: 1fr; }
-    }
-    .pass-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      padding: 14px 16px;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.15s;
-      text-decoration: none;
-      display: block;
-      line-height: 1.5;
-    }
-    .pass-btn:hover {
-      border-color: var(--accent);
-      background: var(--surface2);
-      color: var(--accent);
-    }
-    .pass-btn strong {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 3px;
-    }
-    .pass-btn span { color: var(--text-dim); font-size: 11px; }
-
-    /* SUBMIT */
-    .submit-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      background: var(--accent);
-      color: #111;
-      border: none;
-      font-family: var(--font-display);
-      font-size: 22px;
-      letter-spacing: 0.05em;
-      padding: 14px 36px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-primary:hover { background: #f5d55a; transform: translateY(-1px); }
-    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-    .submit-hint {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--text-dim);
-    }
-
-    /* CONFIRMATION */
-    #confirmation {
-      display: none;
-      background: var(--surface);
-      border: 1px solid var(--accent);
-      padding: 28px;
-      margin-top: 24px;
-      text-align: center;
-    }
-    #confirmation .conf-title {
-      font-family: var(--font-display);
-      font-size: 44px;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-    #confirmation p {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text-dim);
-      margin-bottom: 8px;
-    }
-
-    /* WINS WALL */
-    .wins-wall {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 0 24px 60px;
-    }
-    .wins-wall-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .wall-count {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--text-dim);
-    }
-    .wall-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .wall-card {
-      background: var(--surface);
-      border-left: 3px solid var(--accent);
-      padding: 14px 18px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text);
-      line-height: 1.5;
-      animation: fadeSlide 0.4s ease;
-    }
-    .wall-card.new-win {
-      border-left-color: var(--green);
-    }
-    .wall-card-time {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 6px;
-    }
-
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* FOOTER */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 24px;
-      text-align: center;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-dim);
-      letter-spacing: 0.06em;
-    }
-    .footer a { color: var(--accent); text-decoration: none; }
-
-    /* PULSE */
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    .live-dot {
-      display: inline-block;
-      width: 7px;
-      height: 7px;
-      background: var(--green);
-      border-radius: 50%;
-      margin-right: 6px;
-      animation: pulse 2s infinite;
-      vertical-align: middle;
-    }
+    .slow-read-bar{background:#111;border-left:5px solid #FF1744;padding:18px 20px;margin:0 0 24px;display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;font-family:sans-serif;}
+    .slow-read-icon{font-size:28px;flex-shrink:0;}
+    .slow-read-text{flex:1;min-width:200px;}
+    .slow-read-text strong{display:block;font-size:18px;color:#fff;margin-bottom:4px;}
+    .slow-read-text p{font-size:14px;color:rgba(255,255,255,0.75);margin:0;line-height:1.5;}
+    .slow-read-save-btn{background:#FF1744;color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:900;white-space:nowrap;align-self:center;}
+    header { padding: 48px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
+    .back-link { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); text-decoration: none; letter-spacing: 0.05em; display: inline-block; margin-bottom: 24px; }
+    .back-link:hover { color: var(--text); }
+    .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); color: var(--text-dim); }
+    h1 { font-family: var(--font-display); font-size: clamp(56px, 12vw, 96px); line-height: 0.95; letter-spacing: 0.02em; color: var(--text); margin-bottom: 16px; }
+    .subtitle { font-family: var(--font-mono); font-size: 14px; color: var(--text-dim); letter-spacing: 0.04em; }
+    section { margin-bottom: 56px; }
+    .step-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 8px; display: block; }
+    h2 { font-family: var(--font-display); font-size: clamp(28px, 6vw, 44px); line-height: 1; letter-spacing: 0.03em; color: var(--text); margin-bottom: 20px; }
+    .win-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+    @media (max-width: 480px) { .win-grid { grid-template-columns: 1fr; } }
+    .win-btn { background: var(--surface); border: 2px solid var(--border); color: var(--text); padding: 14px 16px; border-radius: 10px; font-family: var(--font-body); font-size: 14px; cursor: pointer; text-align: left; transition: border-color 0.15s, background 0.15s; line-height: 1.4; }
+    .win-btn:hover { border-color: var(--accent); }
+    .win-btn.selected { border-color: var(--accent); background: rgba(232,197,58,0.08); }
+    .pass-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 480px) { .pass-grid { grid-template-columns: 1fr; } }
+    .pass-card { display: block; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-decoration: none; color: var(--text); transition: border-color 0.15s, transform 0.1s; }
+    .pass-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .pass-card .icon { font-size: 22px; margin-bottom: 8px; display: block; }
+    .pass-card .label { font-weight: 600; font-size: 15px; display: block; margin-bottom: 4px; }
+    .pass-card .desc { font-size: 13px; color: var(--text-dim); }
+    textarea { width: 100%; background: var(--surface); border: 2px solid var(--border); color: var(--text); padding: 14px; border-radius: 10px; font-family: var(--font-body); font-size: 15px; resize: vertical; min-height: 80px; margin-bottom: 12px; transition: border-color 0.15s; }
+    textarea:focus { outline: none; border-color: var(--accent); }
+    .submit-btn { background: var(--accent); color: #111; border: none; padding: 14px 28px; border-radius: 10px; font-family: var(--font-display); font-size: 22px; letter-spacing: 0.05em; cursor: pointer; width: 100%; transition: background 0.15s; }
+    .submit-btn:hover { background: var(--accent-dim); }
+    .submit-btn:disabled { background: var(--border); color: var(--text-dim); cursor: default; }
+    .confirmation { display: none; background: rgba(76,175,125,0.12); border: 1px solid var(--green); border-radius: 10px; padding: 16px; margin-top: 16px; font-family: var(--font-mono); font-size: 14px; color: var(--green); }
+    .wall-count { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); margin-bottom: 16px; display: block; }
+    .wall-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 480px) { .wall-grid { grid-template-columns: 1fr; } }
+    .wall-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-size: 14px; line-height: 1.5; }
+    .wall-card.new-win { border-color: var(--green); background: rgba(76,175,125,0.08); }
+    .wall-card-time { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); margin-top: 8px; }
+    .helper-section { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); border: 2px solid var(--blue); border-radius: 16px; padding: 32px 28px; margin-bottom: 56px; }
+    .helper-section .step-label { color: var(--blue); }
+    .helper-section h2 { color: #fff; }
+    .helper-intro { font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 24px; line-height: 1.6; }
+    .helper-tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    @media (max-width: 520px) { .helper-tracks { grid-template-columns: 1fr; } }
+    .helper-track { background: rgba(255,255,255,0.06); border: 1px solid rgba(91,155,213,0.4); border-radius: 12px; padding: 18px; }
+    .helper-track .role { font-family: var(--font-mono); font-size: 11px; color: var(--blue); letter-spacing: 0.1em; margin-bottom: 6px; display: block; }
+    .helper-track .role-title { font-weight: 700; font-size: 16px; color: #fff; margin-bottom: 6px; display: block; }
+    .helper-track .role-desc { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+    .helper-resources { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+    .helper-resources h3 { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--blue); margin-bottom: 14px; text-transform: uppercase; }
+    .resource-list { display: flex; flex-direction: column; gap: 10px; }
+    .resource-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; font-size: 14px; padding: 10px 14px; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); transition: background 0.15s; }
+    .resource-item:hover { background: rgba(91,155,213,0.15); border-color: var(--blue); }
+    .resource-item .ri-icon { font-size: 20px; flex-shrink: 0; }
+    .resource-item .ri-text { flex: 1; }
+    .resource-item .ri-label { font-weight: 600; font-size: 14px; display: block; }
+    .resource-item .ri-desc { font-size: 12px; color: rgba(255,255,255,0.55); }
+    .resource-item .ri-arrow { color: var(--blue); font-size: 16px; }
+    .helper-cta-text { font-size: 14px; color: rgba(255,255,255,0.6); text-align: center; font-family: var(--font-mono); }
+    footer { border-top: 1px solid var(--border); padding-top: 32px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; text-align: center; }
   </style>
 </head>
 <body>
-<style>.slow-read-bar{background:#111;border-left:5px solid #FF1744;padding:18px 20px;margin:0 0 24px;display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;font-family:sans-serif;}.slow-read-icon{font-size:28px;flex-shrink:0;}.slow-read-text{flex:1;min-width:200px;}.slow-read-text strong{display:block;font-size:18px;color:#fff;margin-bottom:4px;}.slow-read-text p{font-size:14px;color:rgba(255,255,255,0.75);margin:0;line-height:1.5;}.slow-read-save-btn{background:#FF1744;color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:900;white-space:nowrap;align-self:center;}</style>
-<div class="slow-read-bar"><span class="slow-read-icon">⛔</span><div class="slow-read-text"><strong>Stop. Read This Properly.</strong><p>People who rush this mess it up. This takes 3 minutes to read. Save it first.</p></div><button class="slow-read-save-btn" onclick="alert('Press Ctrl+D (Mac: Cmd+D) to bookmark. On mobile tap Share then Save.')">📌 Save This</button></div>
 
-
-  <div class="topbar">
-    <span><a href="https://smallville1979.github.io">← Skint But Sorted</a></span>
-    <span><span class="live-dot"></span>Anonymous. No sign-up. No tracking.</span>
+<div class="slow-read-bar">
+  <div class="slow-read-icon">&#x26D4;</div>
+  <div class="slow-read-text">
+    <strong>Stop. Read This Properly.</strong>
+    <p>People who rush this mess it up. This takes 3 minutes to read. Save it first.</p>
   </div>
+  <button class="slow-read-save-btn" onclick="window.scrollTo(0,0);">&#x1F4CC; Save This</button>
+</div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-label">Joel Protocol · Skint But Sorted Network</div>
-    <h1>THE<br><span>TEACHER</span></h1>
-    <p class="hero-sub">
-      You made it through the network. You used the tools.<br>
-      Now comes the part nobody else asks you.<br>
-      <strong style="color:var(--text)">What actually changed?</strong>
-    </p>
+<a href="https://smallville1979.github.io/skintbutsorted/" class="back-link">&larr; Skint But Sorted</a>
+<p style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim);letter-spacing:0.08em;margin-bottom:32px;">Anonymous. No sign-up. No tracking. &nbsp;&middot;&nbsp; Joel Protocol &middot; Skint But Sorted Network</p>
+
+<header>
+  <div class="tag-row"><span class="tag">TEACHER</span></div>
+  <h1>THE<br>TEACHER</h1>
+  <p class="subtitle">You made it through the network. You used the tools.<br>Now comes the part nobody else asks you.</p>
+  <p style="margin-top:12px;font-size:16px;color:var(--text-dim);">What actually changed?</p>
+</header>
+
+<section>
+  <span class="step-label">01 / BE HONEST</span>
+  <h2>WHAT DID YOU ACTUALLY DO?</h2>
+  <p style="color:var(--text-dim);font-size:15px;margin-bottom:20px;">Pick everything that's true. No points for picking more. No shame for picking one.</p>
+  <div class="win-grid">
+    <button class="win-btn" data-win="I got a job. Or I started properly looking.">I got a job. Or I started properly looking.</button>
+    <button class="win-btn" data-win="I sorted my benefits - PIP, UC, housing benefit, council tax.">I sorted my benefits &mdash; PIP, UC, housing benefit, council tax.</button>
+    <button class="win-btn" data-win="I stopped ignoring the letters and actually dealt with them.">I stopped ignoring the letters and actually dealt with them.</button>
+    <button class="win-btn" data-win="I found food. For me, for my family.">I found food. For me, for my family.</button>
+    <button class="win-btn" data-win="I sorted my housing situation - rights, repairs, eviction.">I sorted my housing situation &mdash; rights, repairs, eviction.</button>
+    <button class="win-btn" data-win="I stopped a scam before it took my money.">I stopped a scam before it took my money.</button>
+    <button class="win-btn" data-win="I learned something I can now explain to someone else.">I learned something I can now explain to someone else.</button>
+    <button class="win-btn" data-win="I got off the sofa and did the one thing I'd been avoiding.">I got off the sofa and did the one thing I'd been avoiding.</button>
+    <button class="win-btn" data-win="I helped someone else with this. Or I'm about to.">I helped someone else with this. Or I'm about to.</button>
+    <button class="win-btn" data-win="Something shifted. I can't fully explain it yet.">Something shifted. I can't fully explain it yet.</button>
   </div>
+</section>
 
-  <hr class="divider">
+<section>
+  <span class="step-label">02 / THE DEAL</span>
+  <h2>NOW PASS ONE THING ON.</h2>
+  <p style="color:var(--text-dim);font-size:15px;margin-bottom:20px;">That's the deal. You got helped. Someone else needs it. Pick the most useful thing you found. Send it to one person.</p>
+  <div class="pass-grid">
+    <a href="https://smallville1979.github.io/skintbutsorted/" class="pass-card">
+      <span class="icon">&#x1F6A8;</span><span class="label">Emergency Help</span><span class="desc">For someone in crisis right now</span>
+    </a>
+    <a href="https://smallville1979.github.io/benefits-guide/" class="pass-card">
+      <span class="icon">&#x1F4B7;</span><span class="label">Benefits Guide</span><span class="desc">For someone not claiming what they're owed</span>
+    </a>
+    <a href="https://smallville1979.github.io/homeless-help/" class="pass-card">
+      <span class="icon">&#x1F3E0;</span><span class="label">Housing Rights</span><span class="desc">For someone dealing with a landlord or eviction</span>
+    </a>
+    <a href="https://smallville1979.github.io/need-food/" class="pass-card">
+      <span class="icon">&#x1F96B;</span><span class="label">Need Food</span><span class="desc">For someone who needs to eat today</span>
+    </a>
+    <a href="https://smallville1979.github.io/scamwatch-priority-alerts/" class="pass-card">
+      <span class="icon">&#x26A0;&#xFE0F;</span><span class="label">Scam Warning</span><span class="desc">For someone being targeted right now</span>
+    </a>
+    <a href="https://smallville1979.github.io/uk-jobs-guide/" class="pass-card">
+      <span class="icon">&#x1F4BC;</span><span class="label">Jobs Guide</span><span class="desc">For someone stuck and not sure where to start</span>
+    </a>
+    <a href="https://smallville1979.github.io/referrals/" class="pass-card">
+      <span class="icon">&#x1F916;</span><span class="label">Earn with Outlier AI</span><span class="desc">Flexible paid work training AI &mdash; from your phone or laptop</span>
+    </a>
+    <a href="https://smallville1979.github.io/social-tariffs/" class="pass-card">
+      <span class="icon">&#x26A1;</span><span class="label">Cut Your Bills</span><span class="desc">Social tariffs &mdash; on benefits? You're probably overpaying</span>
+    </a>
+  </div>
+</section>
 
-  <!-- SECTION 1: THE HONEST QUESTION -->
-  <div class="section">
-    <div class="section-number">01 / BE HONEST</div>
-    <h2>WHAT DID YOU ACTUALLY DO?</h2>
-    <p class="section-desc">Pick everything that's true. No points for picking more. No shame for picking one.</p>
-
-    <div class="wins-grid" id="winsGrid">
-      <button class="win-btn" data-win="I got a job. Or I started properly looking.">I got a job. Or I started properly looking.</button>
-      <button class="win-btn" data-win="I sorted my benefits — PIP, UC, housing benefit, council tax.">I sorted my benefits — PIP, UC, housing benefit, council tax.</button>
-      <button class="win-btn" data-win="I stopped ignoring the letters and actually dealt with them.">I stopped ignoring the letters and actually dealt with them.</button>
-      <button class="win-btn" data-win="I found food. For me, for my family.">I found food. For me, for my family.</button>
-      <button class="win-btn" data-win="I sorted my housing situation — rights, repairs, eviction.">I sorted my housing situation — rights, repairs, eviction.</button>
-      <button class="win-btn" data-win="I stopped a scam before it took my money.">I stopped a scam before it took my money.</button>
-      <button class="win-btn" data-win="I learned something I can now explain to someone else.">I learned something I can now explain to someone else.</button>
-      <button class="win-btn" data-win="I got off the sofa and did the one thing I'd been avoiding.">I got off the sofa and did the one thing I'd been avoiding.</button>
-      <button class="win-btn" data-win="I helped someone else with this. Or I'm about to.">I helped someone else with this. Or I'm about to.</button>
-      <button class="win-btn" data-win="Something shifted. I can't fully explain it yet.">Something shifted. I can't fully explain it yet.</button>
+<div class="helper-section">
+  <span class="step-label">03 / ARE YOU A HELPER BY PROFESSION?</span>
+  <h2>BECOME A MULTIPLIER.</h2>
+  <p class="helper-intro">Social workers. CAB advisors. Housing officers. Teachers. Nurses. If you already sit across from people in crisis every week &mdash; these tools are built for your clients. Take them. Share them. They're free, always will be.</p>
+  <div class="helper-tracks">
+    <div class="helper-track">
+      <span class="role">TRACK A</span>
+      <span class="role-title">Send directly to clients</span>
+      <span class="role-desc">Every page in this network is mobile-first, no login, no sign-up. Safe to text or email to anyone in a crisis situation.</span>
     </div>
-
-    <textarea class="own-it-input" id="ownItText" placeholder="Or write it yourself. Doesn't have to be big. Just true." rows="3"></textarea>
-  </div>
-
-  <hr class="divider">
-
-  <!-- SECTION 2: PASS IT ON -->
-  <div class="section">
-    <div class="section-number">02 / THE DEAL</div>
-    <h2>NOW PASS ONE THING ON.</h2>
-    <p class="section-desc">
-      That's the deal. You got helped. Someone else needs it.<br>
-      Pick the most useful thing you found. Send it to one person.
-    </p>
-
-    <div class="pass-on-options">
-      <a class="pass-btn" href="https://smallville1979.github.io/emergency-help/" target="_blank">
-        <strong>🚨 Emergency Help</strong>
-        <span>For someone in crisis right now</span>
-      </a>
-      <a class="pass-btn" href="https://smallville1979.github.io/benefits/" target="_blank">
-        <strong>💷 Benefits Guide</strong>
-        <span>For someone not claiming what they're owed</span>
-      </a>
-      <a class="pass-btn" href="https://smallville1979.github.io/housing-rights/" target="_blank">
-        <strong>🏠 Housing Rights</strong>
-        <span>For someone dealing with a landlord or eviction</span>
-      </a>
-      <a class="pass-btn" href="https://smallville1979.github.io/need-food/" target="_blank">
-        <strong>🥫 Need Food</strong>
-        <span>For someone who needs to eat today</span>
-      </a>
-      <a class="pass-btn" href="https://smallville1979.github.io/scams/" target="_blank">
-        <strong>⚠️ Scam Warning</strong>
-        <span>For someone being targeted right now</span>
-      </a>
-      <a class="pass-btn" href="https://smallville1979.github.io/jobs/" target="_blank">
-        <strong>💼 Jobs Guide</strong>
-        <span>For someone stuck and not sure where to start</span>
-      </a>
-      <a class="pass-btn" href="https://app.outlier.ai/expert/referrals/link/EBwOcF40yHIXVxI9p1XwglCeRrI" target="_blank" style="border-color:var(--accent-dim)">
-        <strong>🤖 Earn with Outlier AI</strong>
-        <span>Flexible paid work training AI — from your phone or laptop</span>
-      </a>
+    <div class="helper-track">
+      <span class="role">TRACK B</span>
+      <span class="role-title">Share in your team</span>
+      <span class="role-desc">Drop the benefits guide link in your team WhatsApp or staff briefing. Colleagues find tools they didn't know existed.</span>
     </div>
-
-    <textarea class="own-it-input" id="passOnText" placeholder="Or type who you're going to send it to. You don't have to tell us. Just make it real in your head." rows="2"></textarea>
-  </div>
-
-  <hr class="divider">
-
-  <!-- SECTION 3: SUBMIT YOUR WIN -->
-  <div class="section">
-    <div class="section-number">03 / OWN IT</div>
-    <h2>PUT IT ON THE WALL.</h2>
-    <p class="section-desc">
-      Anonymous. No name, no login, no tracking. Just your win, on the wall, for the next person who needs to see it.
-    </p>
-
-    <div class="submit-row">
-      <button class="btn-primary" id="submitBtn" onclick="submitWin()">POST MY WIN</button>
-      <span class="submit-hint">Anonymous · Never stored with your details</span>
+    <div class="helper-track">
+      <span class="role">TRACK C</span>
+      <span class="role-title">Post in community groups</span>
+      <span class="role-desc">Facebook groups, neighbourhood forums, local pages. One post in the right place reaches hundreds of people who need this.</span>
     </div>
-
-    <div id="confirmation">
-      <div class="conf-title">IT'S ON THE WALL.</div>
-      <p>Someone's going to read that and know it's possible.</p>
-      <p style="color:var(--text);margin-top:12px">Now go pass one thing on. That's the whole deal.</p>
+    <div class="helper-track">
+      <span class="role">TRACK D</span>
+      <span class="role-title">Print &amp; display</span>
+      <span class="role-desc">QR code or simple URL on a noticeboard in a GP surgery, food bank, or community centre. Scan = instant help.</span>
     </div>
   </div>
-
-  <hr class="divider">
-
-  <!-- WINS WALL -->
-  <div class="wins-wall">
-    <div class="wins-wall-header">
-      <div>
-        <div class="section-number">THE WALL</div>
-        <h2 style="font-family:var(--font-display);font-size:clamp(32px,6vw,48px);color:var(--text)">PEOPLE WHO MADE IT.</h2>
-      </div>
-      <span class="wall-count" id="wallCount"></span>
+  <div class="helper-resources">
+    <h3>Your quick-send toolkit</h3>
+    <div class="resource-list">
+      <a href="https://smallville1979.github.io/benefits-guide/" class="resource-item">
+        <span class="ri-icon">&#x1F4B7;</span>
+        <span class="ri-text"><span class="ri-label">Benefits Survival Guide</span><span class="ri-desc">UC, PIP, housing benefit, food, energy, mental health &mdash; all in one page</span></span>
+        <span class="ri-arrow">&rarr;</span>
+      </a>
+      <a href="https://smallville1979.github.io/need-food/" class="resource-item">
+        <span class="ri-icon">&#x1F96B;</span>
+        <span class="ri-text"><span class="ri-label">Need Food &mdash; Right Now</span><span class="ri-desc">Food banks, community fridges, pantries, hot meals &mdash; UK-wide, no referral needed for most</span></span>
+        <span class="ri-arrow">&rarr;</span>
+      </a>
+      <a href="https://smallville1979.github.io/homeless-help/" class="resource-item">
+        <span class="ri-icon">&#x1F3E0;</span>
+        <span class="ri-text"><span class="ri-label">Housing Rights &amp; Homelessness Help</span><span class="ri-desc">Shelter, council housing registers, section 21 rights, eviction defence</span></span>
+        <span class="ri-arrow">&rarr;</span>
+      </a>
+      <a href="https://smallville1979.github.io/mentalhealthhelp/" class="resource-item">
+        <span class="ri-icon">&#x1F499;</span>
+        <span class="ri-text"><span class="ri-label">Mental Health Help &mdash; Free</span><span class="ri-desc">NHS, Samaritans, Mind, Everyturn, free CBT &mdash; no waiting list options included</span></span>
+        <span class="ri-arrow">&rarr;</span>
+      </a>
+      <a href="https://smallville1979.github.io/scamwatch-priority-alerts/" class="resource-item">
+        <span class="ri-icon">&#x26A0;&#xFE0F;</span>
+        <span class="ri-text"><span class="ri-label">UK Scam Watch</span><span class="ri-desc">Current scams targeting low-income people &mdash; updated, named, and explained</span></span>
+        <span class="ri-arrow">&rarr;</span>
+      </a>
+      <a href="https://smallville1979.github.io/bank-holiday-payments/" class="resource-item">
+        <span class="ri-icon">&#x1F4C5;</span>
+        <span class="ri-text"><span class="ri-label">Bank Holiday Payment Dates 2026</span><span class="ri-desc">Share before every bank holiday &mdash; stops unnecessary panic and DWP calls</span></span>
+        <span class="ri-arrow">&rarr;</span>
+      </a>
     </div>
-    <div class="wall-grid" id="wallGrid"></div>
   </div>
+  <p class="helper-cta-text">Everything above is free. No sign-up. No tracking. Share any link as-is.</p>
+</div>
 
-  <!-- FOOTER -->
-  <div class="footer">
-    <a href="https://smallville1979.github.io">SKINT BUT SORTED NETWORK</a>
-    &nbsp;·&nbsp; FREE · NO ADS · NO SIGN-UP
-    &nbsp;·&nbsp; BUILT IN NEWCASTLE
+<section>
+  <span class="step-label">04 / OWN IT</span>
+  <h2>PUT IT ON THE WALL.</h2>
+  <p style="color:var(--text-dim);font-size:15px;margin-bottom:20px;">Anonymous. No name, no login, no tracking. Just your win, on the wall, for the next person who needs to see it.</p>
+  <textarea id="ownItText" placeholder="Write your own win here (optional &mdash; or just pick from above)"></textarea>
+  <button class="submit-btn" id="submitBtn" onclick="submitWin()">POST MY WIN</button>
+  <p style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-top:8px;text-align:center;">Anonymous &middot; Never stored with your details</p>
+  <div class="confirmation" id="confirmation">
+    IT'S ON THE WALL. Someone's going to read that and know it's possible. Now go pass one thing on. That's the whole deal.
   </div>
+</section>
+
+<section>
+  <h2>THE WALL</h2>
+  <p style="color:var(--text-dim);font-size:14px;margin-bottom:16px;">PEOPLE WHO MADE IT.</p>
+  <span class="wall-count" id="wallCount">10+ wins on the wall</span>
+  <div class="wall-grid" id="wallGrid"></div>
+</section>
+
+<footer>
+  SKINT BUT SORTED NETWORK &middot; FREE &middot; NO ADS &middot; NO SIGN-UP &middot; BUILT IN NEWCASTLE
+</footer>
 
 <script>
-  // SEED WINS — real enough to feel human
-  const seedWins = [
-    { text: "I got a job. Took 4 months. Applied to 60 places. One said yes. That's all it takes.", time: "3 days ago" },
-    { text: "I learned something I can now explain to someone else. — Benefits checker changed everything for my mum.", time: "5 days ago" },
-    { text: "I stopped ignoring the letters and actually dealt with them. 18 months of dread, sorted in a morning.", time: "1 week ago" },
-    { text: "I found food. For me, for my family. — Olio. Never thought I'd use it. Now I tell everyone.", time: "1 week ago" },
-    { text: "Something shifted. I can't fully explain it yet. But I'm not where I was.", time: "2 weeks ago" },
-    { text: "I sorted my housing situation. Section 21 rights. Landlord backed off the moment I mentioned the Act.", time: "2 weeks ago" },
-    { text: "I stopped a scam before it took my money. Recognised the signs. Hung up. £600 still in my account.", time: "3 weeks ago" },
-    { text: "I got off the sofa and did the one thing I'd been avoiding. Then the next one. Then the one after that.", time: "3 weeks ago" },
-    { text: "I helped someone else with this. — Posted the benefits link in my Facebook group. 3 people messaged me to say thank you.", time: "1 month ago" },
-    { text: "I sorted my benefits. Was owed backdated UC for 8 months. No one had ever explained I could claim.", time: "1 month ago" },
-  ];
-
-  function getLocalWins() {
-    try {
-      return JSON.parse(localStorage.getItem('teacherWins') || '[]');
-    } catch { return []; }
-  }
-
-  function saveLocalWin(text) {
-    const wins = getLocalWins();
-    wins.unshift({ text, time: 'Just now', isNew: true });
-    try { localStorage.setItem('teacherWins', JSON.stringify(wins.slice(0, 50))); } catch {}
-  }
-
-  function renderWall() {
-    const localWins = getLocalWins();
-    const allWins = [...localWins, ...seedWins];
-    const grid = document.getElementById('wallGrid');
-    const count = document.getElementById('wallCount');
-    count.textContent = allWins.length + '+ wins on the wall';
-    grid.innerHTML = '';
-    allWins.forEach(w => {
-      const card = document.createElement('div');
-      card.className = 'wall-card' + (w.isNew ? ' new-win' : '');
-      card.innerHTML = `${escapeHtml(w.text)}<div class="wall-card-time">${w.time}</div>`;
-      grid.appendChild(card);
-    });
-  }
-
-  function escapeHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
-  // WIN BUTTON SELECTION
-  document.querySelectorAll('.win-btn').forEach(btn => {
-    btn.addEventListener('click', () => btn.classList.toggle('selected'));
+const seedWins = [
+  { text: "I got a job. Took 4 months. Applied to 60 places. One said yes. That's all it takes.", time: "3 days ago" },
+  { text: "I learned something I can now explain to someone else. - Benefits checker changed everything for my mum.", time: "5 days ago" },
+  { text: "I stopped ignoring the letters and actually dealt with them. 18 months of dread, sorted in a morning.", time: "1 week ago" },
+  { text: "I found food. For me, for my family. - Olio. Never thought I'd use it. Now I tell everyone.", time: "1 week ago" },
+  { text: "Something shifted. I can't fully explain it yet. But I'm not where I was.", time: "2 weeks ago" },
+  { text: "I sorted my housing situation. Section 21 rights. Landlord backed off the moment I mentioned the Act.", time: "2 weeks ago" },
+  { text: "I stopped a scam before it took my money. Recognised the signs. Hung up. 600 still in my account.", time: "3 weeks ago" },
+  { text: "I got off the sofa and did the one thing I'd been avoiding. Then the next one. Then the one after that.", time: "3 weeks ago" },
+  { text: "I helped someone else with this. - Posted the benefits link in my Facebook group. 3 people messaged me to say thank you.", time: "1 month ago" },
+  { text: "I sorted my benefits. Was owed backdated UC for 8 months. No one had ever explained I could claim.", time: "1 month ago" },
+  { text: "I'm a housing officer. Sent the benefits guide to 12 clients this week. Three had never done a benefits check.", time: "2 weeks ago" },
+  { text: "CAB advisor here. I bookmark this network and share it in every first appointment now.", time: "3 weeks ago" },
+];
+function getLocalWins() { try { return JSON.parse(localStorage.getItem('teacherWins') || '[]'); } catch { return []; } }
+function saveLocalWin(text) { const wins = getLocalWins(); wins.unshift({ text, time: 'Just now', isNew: true }); try { localStorage.setItem('teacherWins', JSON.stringify(wins.slice(0, 50))); } catch {} }
+function renderWall() {
+  const localWins = getLocalWins();
+  const allWins = [...localWins, ...seedWins];
+  const grid = document.getElementById('wallGrid');
+  const count = document.getElementById('wallCount');
+  count.textContent = allWins.length + '+ wins on the wall';
+  grid.innerHTML = '';
+  allWins.forEach(w => {
+    const card = document.createElement('div');
+    card.className = 'wall-card' + (w.isNew ? ' new-win' : '');
+    card.innerHTML = escapeHtml(w.text) + '<div class="wall-card-time">' + w.time + '</div>';
+    grid.appendChild(card);
   });
-
-  function getSelectedWins() {
-    const selected = [...document.querySelectorAll('.win-btn.selected')].map(b => b.dataset.win);
-    const own = document.getElementById('ownItText').value.trim();
-    if (own) selected.push(own);
-    return selected;
-  }
-
-  function submitWin() {
-    const wins = getSelectedWins();
-    if (wins.length === 0) {
-      const input = document.getElementById('ownItText');
-      input.style.borderColor = 'var(--red)';
-      input.placeholder = 'Pick something above, or write it here.';
-      setTimeout(() => { input.style.borderColor = ''; }, 2000);
-      return;
-    }
-    const text = wins.join(' · ');
-    saveLocalWin(text);
-    renderWall();
-    document.getElementById('confirmation').style.display = 'block';
-    document.getElementById('submitBtn').disabled = true;
-    document.getElementById('submitBtn').textContent = 'POSTED ✓';
-    document.getElementById('confirmation').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  // INIT
+}
+function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+document.querySelectorAll('.win-btn').forEach(btn => { btn.addEventListener('click', () => btn.classList.toggle('selected')); });
+function getSelectedWins() { const selected = [...document.querySelectorAll('.win-btn.selected')].map(b => b.dataset.win); const own = document.getElementById('ownItText').value.trim(); if (own) selected.push(own); return selected; }
+function submitWin() {
+  const wins = getSelectedWins();
+  if (wins.length === 0) { const input = document.getElementById('ownItText'); input.style.borderColor = 'var(--red)'; input.placeholder = 'Pick something above, or write it here.'; setTimeout(() => { input.style.borderColor = ''; }, 2000); return; }
+  saveLocalWin(wins.join(' - '));
   renderWall();
+  document.getElementById('confirmation').style.display = 'block';
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').textContent = 'POSTED';
+  document.getElementById('confirmation').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+renderWall();
 </script>
 </body>
 </html>
